@@ -65,27 +65,31 @@ class Bob:
                 question = "".join(self.rnd.choice(alphabet) for i in range(length))
             else:
                 question = language.generate(self.rnd, length)
-
+			
             expected_answer = 'yes' if language.test(question) else 'no'
             alice.stdin.write(('%s\n' % question).encode('utf8'))
-            alice.stdin.flush()
-
+            alice.stdin.flush()				
             answer = alice.stdout.readline().strip().decode('utf8')
 
             print("Asked: `%s` ==> `%s` vs `%s`" % (question, answer, expected_answer))
 
             if answer == expected_answer:
                 right += 1
+				
+        print("----\nPercentage: %.2f %%" % (right*100.0/N))
 
         return right * 1.0 / N
 
 
 def main():
-    bob = Bob(sys.argv[1:], 10,
-        Language("Universe", 100, "abc", S="aS bS cS a b c"),
-        Language("Even number of A", 100, "ab", S="aO bE b", O="bO aE a", E="aO bE b"),
-        Language("Starts with A", 100, "abc", S="aU a", U="aU bU cU a b c"),
-        Language("One A and One B", 100, "abc", S="cS aA bB", A="cA bT b", B="cB aT a", T="cT c"),
+    bob = Bob(sys.argv[1:], 3,
+        # Language("A^n B^n", 100, "ab", S="aS aB", B="bB b"),
+        # Language("Universe", 100, "abc", S="aS bS cS a b c"),
+        # Language("Even number of A", 100, "ab", S="aO bE b", O="bO aE a", E="aO bE b"),
+        # Language("Starts with A", 100, "abc", S="aU a", U="aU bU cU a b c"),
+        # Language("One A and One B", 100, "abc", S="cS aA bB", A="cA bT b", B="cB aT a", T="cT c"),
+        Language("aabba*b*", 100, "ab", S="aA aB", A="aA a", B="bB b"),
+        Language("a*b*c*", 100, "abc", S="aA bB cC", A="aA bB cC", B="bB cC", C="cC c"),
     )
 
     bob.run()
